@@ -27,7 +27,6 @@ const CreditCardInput = () => {
   const leaveField = (index:number) => {
     const indexArray = new Array<boolean>(3).fill(false);
     indexArray[index] = true;
-    console.log("LEAVE", indexArray);
     setFocusIndex(indexArray);;
   }
 
