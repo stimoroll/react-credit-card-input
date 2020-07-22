@@ -28,13 +28,15 @@ const DateInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
     } else if(!epirationYear.isPotentiallyValid) {
       setInfo("Wrong year data");
       setError(true);
+    } else if(!epirationDate.isValid) {
+      setInfo("Wrong data");
+      setError(true);
     } else {
       setInfo("");
       setError(false);
-    }
-
-    if(epirationDate.isValid && leaveFieldCallback) {
-      leaveFieldCallback(tabIndex + 1);
+      if(leaveFieldCallback) {
+        leaveFieldCallback(tabIndex + 1);
+      }
     }
   }
 
@@ -60,7 +62,7 @@ const DateInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
     if(focus) {
       inputRef.current.focus();
     }
-  }, [focus])
+  }, [focus]);
 
   return (
     <InputMask 

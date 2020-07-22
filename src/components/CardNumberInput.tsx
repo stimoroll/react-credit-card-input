@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useRef, useEffect, useState, useContext } from 'react';
 import { TextField, InputAdornment } from '@material-ui/core';
 // @ts-ignore
 import PaymentIcon from 'react-payment-icons';
@@ -16,24 +16,26 @@ const CardNumberInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
   const [cardType, setCardType] = useState("");
   const [error, setError] = useState(false);
   const [info, setInfo] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null!);
 
   const CardContext = useContext(CreditCardDataContext);
 
   const handleChange = (event:any) => {
-    const cardNumberValue = event?.target?.value;
+    const cardNumberValue:string = event?.target?.value;
     const cardNumberValidator:CardNumberVerification = number(cardNumberValue);
     setCardType(cardNumberValidator?.card?.type || "");
-
-    if(!cardNumberValidator.isPotentiallyValid) {
-      setError(true);
-      setInfo("are you shure is valid?");
-    } else if (!cardNumberValidator.isValid) {
-      setError(true);
-      setInfo("still something sticky");
-    } else if (cardNumberValidator.isValid && leaveFieldCallback) {
-      setError(false);
-      setInfo("");
-      leaveFieldCallback(tabIndex + 1);
+    if(cardNumberValue.length > 0) {
+      if(!cardNumberValidator.isPotentiallyValid) {
+        setError(true);
+        setInfo("are you shure is valid?");
+      } else if (!cardNumberValidator.isValid) {
+        setError(true);
+        setInfo("still something sticky");
+      } else if (cardNumberValidator.isValid && leaveFieldCallback) {
+        setError(false);
+        setInfo("");
+        leaveFieldCallback(tabIndex + 1);
+      }
     }
   }
 
@@ -48,11 +50,14 @@ const CardNumberInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
         cardNumber: event?.target?.value || "",
         cvclenght: cardNumberValidator?.card?.code.size || 3
       });
-    } else {
-      setError(true);
-      setInfo("its not valid number");
     }
   }
+
+  useEffect(() => {
+    if(focus) {
+      inputRef.current.focus();
+    }
+  }, [focus])
 
   return (
     <Fragment>
@@ -70,6 +75,7 @@ const CardNumberInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
           tabIndex={tabIndex}
           autoFocus={focus}
           helperText={info}
+          inputRef={inputRef}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

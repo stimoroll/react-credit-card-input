@@ -29,10 +29,12 @@ const CVCInput = ({leaveFieldCallback, focus, tabIndex}:CVCInputProps) => {
     } else if (!CVCverify.isPotentiallyValid) {
       setError(true);
       setInfo("Dont now what but something sticky");
-    } else if (CVCverify.isValid && leaveFieldCallback) {
+    } else if (CVCverify.isValid) {
       setError(false);
       setInfo("");
-      leaveFieldCallback(tabIndex + 1);
+      if(leaveFieldCallback) {
+        leaveFieldCallback(tabIndex + 1);
+      }
     }
   }
 
