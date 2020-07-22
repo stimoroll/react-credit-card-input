@@ -7,6 +7,7 @@ import { ExpirationDateVerification } from 'card-validator/dist/expiration-date'
 import { ExpirationMonthVerification } from 'card-validator/dist/expiration-month';
 import { ExpirationYearVerification } from 'card-validator/dist/expiration-year';
 import { CreditCardDataContext } from './CredtCardInput';
+import { absLenght } from '../helpers/converters';
 
 
 const DateInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
@@ -21,19 +22,24 @@ const DateInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
     const epirationDate:ExpirationDateVerification = expirationDate(value);
     const epirationMonth:ExpirationMonthVerification = expirationMonth(value);
     const epirationYear:ExpirationYearVerification = expirationYear(value);
+    const DateLength = absLenght(value);
 
-    if(!epirationMonth.isPotentiallyValid) {
+    console.log(DateLength);
+
+    if(DateLength > 0 && !epirationMonth.isPotentiallyValid) {
       setInfo("Wrong month data");
       setError(true);
-    } else if(!epirationYear.isPotentiallyValid) {
+    } else if(DateLength > 0 && !epirationYear.isPotentiallyValid) {
       setInfo("Wrong year data");
       setError(true);
-    } else if(!epirationDate.isValid) {
+    } else if(DateLength > 0 && !epirationDate.isValid) {
       setInfo("Wrong data");
       setError(true);
     } else {
       setInfo("");
       setError(false);
+    }
+    if(epirationDate.isValid) {
       if(leaveFieldCallback) {
         leaveFieldCallback(tabIndex + 1);
       }

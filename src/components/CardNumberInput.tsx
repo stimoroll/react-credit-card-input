@@ -10,6 +10,7 @@ import { CardNumberVerification } from 'card-validator/dist/card-number';
 
 import { InputProps } from '../types/helper.types';
 import { CreditCardDataContext } from './CredtCardInput';
+import { absLenght } from '../helpers/converters';
 
 //TODO: still not proper valid at last char if number is not valid
 
@@ -26,7 +27,7 @@ const CardNumberInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
     const cardNumberValidator:CardNumberVerification = number(cardNumberValue);
 
     setCardType(cardNumberValidator?.card?.type || "");
-      if(/([0-9]+)/.test(cardNumberValue) && !cardNumberValidator.isPotentiallyValid) {
+      if(absLenght(cardNumberValue) > 0  && !cardNumberValidator.isPotentiallyValid) {
         setError(true);
         setInfo("are you shure is valid?");
         //TODO: is not good

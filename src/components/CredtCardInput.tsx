@@ -1,5 +1,5 @@
 
-import React, { Fragment, useEffect, useState, createContext } from 'react';
+import React, { Fragment, useEffect, useState, useCallback, createContext } from 'react';
 import CVCInput from './CVCInput';
 import DateInput from './DateInput';
 import CardNumberInput from './CardNumberInput';
@@ -30,9 +30,12 @@ const CreditCardInput = () => {
     setFocusIndex(indexArray);;
   }
 
-  const setFocusOnFirst = () => {
-    leaveField(0);
-  }
+  const setFocusOnFirst = useCallback(
+    () => {
+      leaveField(0);
+    },
+    [],
+  )
 
   useEffect(() => {
     leaveField(0);

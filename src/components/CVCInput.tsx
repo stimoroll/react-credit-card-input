@@ -5,6 +5,7 @@ import { cvv } from "card-validator";
 import { Verification } from 'card-validator/dist/types';
 import { InputProps } from '../types/helper.types';
 import { CreditCardDataContext } from './CredtCardInput';
+import { absLenght } from '../helpers/converters';
 
 interface CVCInputProps extends InputProps {
   charcount?: number;
@@ -16,18 +17,18 @@ const CVCInput = ({leaveFieldCallback, focus, tabIndex}:CVCInputProps) => {
 
   const CardContext = useContext(CreditCardDataContext);
   const inputRef = useRef<HTMLInputElement>(null!);
-  const cvccount = CardContext?.cardData?.cvclenght;
+  const CVCLengthRequired = CardContext?.cardData?.cvclenght;
 
 
   const handleChange = (event:any) => {
-    const CVCvalue = event?.target?.value;
+    
+    const CVCLength = absLenght(inputRef?.current.value);
     const CVCverify:Verification = cvv(event?.target?.value);
 
-    //TODO: lenght not work - replace with regex
-    if(CVCvalue?.lenght !== cvccount) {
+    if(CVCLength > 0 && CVCLength!== CVCLengthRequired) {
       setError(true);
       setInfo("Incorect CVC length");
-    } else if (!CVCverify.isPotentiallyValid) {
+    } else if (CVCLength > 0 && !CVCverify.isPotentiallyValid) {
       setError(true);
       setInfo("Dont now what but something sticky");
     } else if (CVCverify.isValid) {
@@ -41,8 +42,9 @@ const CVCInput = ({leaveFieldCallback, focus, tabIndex}:CVCInputProps) => {
 
   const handleBlur = (event:any) => {
     const CVCvalue = event?.target?.value;
+    const CVCLength = absLenght(CVCvalue);
     const value:Verification = cvv(CVCvalue);
-    if(value.isValid) {
+    if(CVCLength > 0 && value.isValid) {
       setError(false);
       setInfo("");
       CardContext?.setCardData({
