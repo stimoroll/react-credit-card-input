@@ -11,6 +11,7 @@ import { CardNumberVerification } from 'card-validator/dist/card-number';
 import { InputProps } from '../types/helper.types';
 import { CreditCardDataContext } from './CredtCardInput';
 
+//TODO: still not proper valid at last char if number is not valid
 
 const CardNumberInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
   const [cardType, setCardType] = useState("");
@@ -23,20 +24,25 @@ const CardNumberInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
   const handleChange = (event:any) => {
     const cardNumberValue:string = event?.target?.value;
     const cardNumberValidator:CardNumberVerification = number(cardNumberValue);
+
     setCardType(cardNumberValidator?.card?.type || "");
-    if(cardNumberValue.length > 0) {
-      if(!cardNumberValidator.isPotentiallyValid) {
+      if(/([0-9]+)/.test(cardNumberValue) && !cardNumberValidator.isPotentiallyValid) {
         setError(true);
         setInfo("are you shure is valid?");
-      } else if (!cardNumberValidator.isValid) {
-        setError(true);
-        setInfo("still something sticky");
-      } else if (cardNumberValidator.isValid && leaveFieldCallback) {
+        //TODO: is not good
+      // } else if (/([0-9]{4,})/.test(cardNumberValue) && !cardNumberValidator.isValid) {
+      //   setError(true);
+      //   setInfo("still something sticky");
+      } else if (!/([0-9]+)/.test(cardNumberValue)) {
         setError(false);
         setInfo("");
-        leaveFieldCallback(tabIndex + 1);
+      } else if (cardNumberValidator.isValid) {
+        setError(false);
+        setInfo("");
+        if(leaveFieldCallback) {
+          leaveFieldCallback(tabIndex + 1);
+        }
       }
-    }
   }
 
   const handleBlur = (event:any) => {
@@ -50,6 +56,12 @@ const CardNumberInput = ({leaveFieldCallback, focus, tabIndex}:InputProps) => {
         cardNumber: event?.target?.value || "",
         cvclenght: cardNumberValidator?.card?.code.size || 3
       });
+    } else {
+      setError(true);
+      setInfo("still something sticky");
+      if(leaveFieldCallback) {
+        leaveFieldCallback(tabIndex);
+      }
     }
   }
 

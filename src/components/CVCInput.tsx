@@ -23,6 +23,7 @@ const CVCInput = ({leaveFieldCallback, focus, tabIndex}:CVCInputProps) => {
     const CVCvalue = event?.target?.value;
     const CVCverify:Verification = cvv(event?.target?.value);
 
+    //TODO: lenght not work - replace with regex
     if(CVCvalue?.lenght !== cvccount) {
       setError(true);
       setInfo("Incorect CVC length");
