@@ -1,8 +1,11 @@
-REACT: Credit Card Input component with:
+# REACT / TypeScript / Hooks: Credit Card Input component 
+with:
 * validation of card number
 * validation of cvc 
 * validation of expiration date
 * detect card issuer
+* auto-switch to next field
+* keyboard support
 
 # DEMO
 See the demo: https://codesandbox.io/s/github/stimoroll/react-credit-card-input
