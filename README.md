@@ -15,4 +15,5 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 # TODO
 * extract messages ouside
+* add loading spinner while loading card image
 * e2e tests
